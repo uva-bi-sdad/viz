@@ -7,10 +7,11 @@ library(ggplot2)
 library(forcats)
 library(scatterpie)
 library(ggforce)
-dataset <- read_excel("visualization/sdr2017.xlsx")
+dataset <- read_excel("/home/sm9dv/viz/data/viz/original/sdr2017.xlsx")
 
 theme_Palette<-c("#1B3766", "#02ABD6", "#6DD4DB", "#A9D5A5", "#F17E1D")
 wheel <- function(col, radius = 1, ...)
+  
   pie(rep(1, length(col)), col=col, radius=radius)
 wheel(theme_Palette)
 
@@ -177,7 +178,7 @@ invfun <- function(x){
 
 ggplot(eng.nat) +
   geom_segment(aes(x = 0, xend = NaturalizedNumb, y = invfun(position), yend = invfun(position)), lwd = 1,  color = theme_Palette[1])+
-  geom_circle(aes(x0 = NaturalizedNumb, y0 = invfun(position), r = NaturalizedSE), data = eng.nat, linetype = 3, color = theme_Palette[5]) +
+  geom_circle(aes(x0 = NaturalizedNumb, y0 = invfun(position), r = NaturalizedSE), data = eng.nat, color = theme_Palette[5]) +
   coord_fixed() +
   theme_minimal() +
   scale_y_continuous(breaks = seq(from = invfun(1), to = invfun(13), by= invfun(fun(15000/12))), labels = eng.nat$FieldStudy) +
