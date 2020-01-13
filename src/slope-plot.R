@@ -167,6 +167,7 @@ y <- c(89.7+2.2, 89.7-2.2, fun(.1), 89.9+1.5, 89.9-1.5, fun(.9))
 x <- c(0, 0, .1, 1, 1, .9)
 id <- rep(c("a", "b"), each = 3)
 
+
 ggplot() +
   geom_segment(aes(x = 0.1, xend = .9, y = fun(0.1), yend = fun(0.9)), 
                size = 1.2) +
@@ -400,5 +401,74 @@ ggplot() +
         axis.ticks=element_blank(),
         plot.title = element_text(hjust = 0.5),
         legend.position = "none")
+
+
+max(YR2013SE, YR2017SE)
+min(YR2013SE, YR2017SE)
+
+library(ggpubr)
+fun8<- function(x){
+  ((4-1)/(2.2-.65))*(x-.65)+1
+}
+
+#thickness of line this is ugly
+ggplot() +
+  geom_segment(aes(x = 0, xend = .5, y = fun2(0), yend = fun2(.5), color = FOS),size = fun8(YR2013SE)) +
+
+  geom_segment(aes(x =0.5, xend = 1, y = fun2(.5), yend = fun2(1), color = FOS),  size = fun8(YR2017SE)) +
+  scale_color_manual(values = c(theme_Palette[1], theme_Palette[2], theme_Palette[3], theme_Palette[4], theme_Palette[5], "red", "purple"))+
+  scale_x_continuous(limits=c(-0.5, 1.25)) +
+  scale_y_continuous(limits = c(86, 94)) +
+ 
+  geom_text(aes(x=0-0.1,
+                y=YR2013,
+                label=paste0(FOS),
+                col= FOS),
+            hjust="right") +
+  geom_text(aes(x = 0-0.03,
+                y = YR2013,
+                label = paste0(round(YR2013, 1), "%")),
+            hjust
+            ="right",
+            col="grey30") +
+  geom_text(aes(x=1+0.08,
+                y=YR2017,
+                label=paste0(round(YR2017, 1), "%")),
+            col="grey30") +
+  labs(title="Labor force participation rate among U.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
+       caption = "The shaded tails show the standard error.") +
+  theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
+  theme_classic()+
+  theme_void() +
+  theme(axis.line=element_blank(),
+        axis.text=element_blank(),
+        axis.title=element_blank(),
+        axis.ticks=element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none")
+
+# brackets
+ggplot() +
+  geom_segment(aes(x = 0, xend = 1, y = fun2(0), yend = fun2(1), color = FOS),size = 1.2) +
+  scale_color_manual(values = c(theme_Palette[1], theme_Palette[2], theme_Palette[3], theme_Palette[4], theme_Palette[5], "red", "purple"))+
+  geom_bracket(xmin = 0, xmax = .1, y.position = 8)+
+  scale_x_continuous(limits=c(-0.5, 1.25)) +
+  scale_y_continuous(limits = c(86, 94)) 
+
+
+df <- ToothGrowth
+df$dose <- factor(df$dose)
+
+# Add bracket with labels
+test <- ggboxplot(df, x = "dose", y = "len") 
+ test+ geom_bracket(
+    xmin = "0.5", xmax = "1", y.position = 30,
+    label = "t-test, p < 0.05"
+  )+
+  coord_flip()
+
+
+
+
 
 

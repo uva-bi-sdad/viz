@@ -26,21 +26,21 @@ wheel(theme_Palette)
 
 
 ##### Read In Data #####
-comp.math <- read_excel("visualization/comp-math.xlsx", skip = 3)
+comp.math <- read_excel("/home/sm9dv/viz/data/viz/original/comp-math.xlsx", skip = 3)
 comp.math <- comp.math[-c(53, 55:61), ]
 
-comp.math.18 <- comp.math %>% select("State", "2018", `2018__2`) %>% filter(!(State == "United States"))
+comp.math.18 <- comp.math %>% select("State", "2018...17", "2018...51") %>% filter(!(State == "United States"))
 
-colnames(comp.math.18)[colnames(comp.math.18)== "2018"] <- "count.18"
-colnames(comp.math.18)[colnames(comp.math.18)== "2018__2"] <- "count.18.per"
-comp.math.se <- read_excel("visualization/comp-math-se.xlsx", skip = 3)
+colnames(comp.math.18)[colnames(comp.math.18)== "2018...17"] <- "count.18"
+colnames(comp.math.18)[colnames(comp.math.18)== "2018...51"] <- "count.18.per"
+comp.math.se <- read_excel("/home/sm9dv/viz/data/viz/original/comp-math-se.xlsx", skip = 3)
 comp.math.se <- comp.math.se[-c(53, 55:61), ]
 
 
-comp.math.se.18 <- comp.math.se %>% select("State", "2018", `2018__2`) %>% filter(!(State == "United States"))
+comp.math.se.18 <- comp.math.se %>% select("State", "2018...17", "2018...51") %>% filter(!(State == "United States"))
 
-colnames(comp.math.se.18)[colnames(comp.math.se.18)== "2018"] <- "se.18"
-colnames(comp.math.se.18)[colnames(comp.math.se.18)== "2018__2"] <- "se.18.per"
+colnames(comp.math.se.18)[colnames(comp.math.se.18)== "2018...17"] <- "se.18"
+colnames(comp.math.se.18)[colnames(comp.math.se.18)== "2018...51"] <- "se.18.per"
 
 
 comp.math.18 <- merge(comp.math.18, comp.math.se.18, by = "State")
@@ -458,6 +458,7 @@ state_coords <- structure(list(abbrev = c("AL", "AK", "AZ", "AR", "CA", "CO",
                           class = "data.frame", row.names = c(NA, -54L))
 
 state_coords <- state_coords[order(state_coords$state),]
+
 
 #Makes sure that state names are valid
 state_data <- validate_states(state_data, state_col, merge.x)
