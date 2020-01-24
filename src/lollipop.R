@@ -9,11 +9,15 @@ library(scatterpie)
 library(ggforce)
 dataset <- read_excel("/home/sm9dv/viz/data/viz/original/sdr2017.xlsx")
 
-theme_Palette<-c("#1B3766", "#02ABD6", "#6DD4DB", "#A9D5A5", "#F17E1D")
+#Color Blind Palettes
+#color blind palette with grey
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+#color blind palette with black
+cbPalette.blk<-c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+#Display the colorblind palette
 wheel <- function(col, radius = 1, ...)
-  
-  pie(rep(1, length(col)), col=col, radius=radius)
-wheel(theme_Palette)
+  pie(rep(1, length(col)), col = col, radius = radius, ...)
+wheel(cbPalette)
 
 #Clean dataset
 dataset <- dataset[-c(1:2, 104:108),-c(2:5, 10:11)]
@@ -50,7 +54,7 @@ eng.long.nat[c(14:26), ] <- eng.long.nat  %>% filter(Number == "NaturalizedSE") 
 ggplot(eng.long.nat, aes(x = Value, y = fct_reorder(FieldStudy, Value), color = Number) ) +
   geom_segment( aes(x=0, xend=Value, yend=FieldStudy),  lwd=2) +
   geom_point(aes(x = Value), size = 5) +
-  scale_colour_manual(name = NULL, labels = c("Standard Error", "Count"), values = c(theme_Palette[5], theme_Palette[1]))+
+  scale_colour_manual(name = NULL, labels = c("Standard Error", "Count"), values = c(cbPalette[6], cbPalette[2]))+
   theme_minimal() +
   labs(title="U.S. Naturalized Residing Employed Doctoral Engineers, \nby Field of Doctorate ", 
        y = "", 
@@ -71,7 +75,7 @@ ggplot(eng.long.nat, aes(x = Value, y = fct_reorder(FieldStudy, Value), color = 
 ggplot(eng.long.nat, aes(x = Value, y = fct_reorder(FieldStudy, Value), color = Number) ) +
   geom_segment( aes(x=0, xend=Value, yend=FieldStudy),  lwd=2) +
   geom_point(aes(x = Value), size = 5) +
-  scale_colour_manual(name = NULL, labels = c("Standard Error", "Count"), values = c(theme_Palette[5], theme_Palette[1]))+
+  scale_colour_manual(name = NULL, labels = c("Standard Error", "Count"), values = c(cbPalette[6], cbPalette[2]))+
   theme_minimal() +
   labs(title="U.S. Naturalized Residing Employed Doctoral Engineers, \nby Field of Doctorate ", 
        y = "", 
@@ -110,10 +114,10 @@ invfun <- function(x){
 }
 
 ggplot(eng.nat) +
-  geom_segment(aes(x=fun(0), xend=fun(NaturalizedNumb), y=position, yend=position), lwd=3, color = theme_Palette[1]) +
-  geom_scatterpie(aes(x = fun(NaturalizedNumb), y = position, r = 0.3), data = eng.nat, cols = c("propSE", "propSEnot"), color = theme_Palette[1]) +
+  geom_segment(aes(x=fun(0), xend=fun(NaturalizedNumb), y=position, yend=position), lwd=3, color = cbPalette[6]) +
+  geom_scatterpie(aes(x = fun(NaturalizedNumb), y = position, r = 0.3), data = eng.nat, cols = c("propSE", "propSEnot"), color = cbPalette[6]) +
   coord_equal(ratio = 1)+
-  scale_fill_manual(name = NULL, labels = c("Proportion of Standard Error",  "Count"), values = c(theme_Palette[5], theme_Palette[1]))+
+  scale_fill_manual(name = NULL, labels = c("Proportion of Standard Error",  "Count"), values = c(cbPalette[2], cbPalette[6]))+
   scale_y_continuous(breaks = seq(from = 1, to = 13, by= 1), labels = eng.nat$FieldStudy) +
   scale_x_continuous(breaks = seq(from = 1, to = 13, by= 2), 
                      labels = invfun(seq(from = 1, to = 13, by = 2)), 
@@ -146,8 +150,8 @@ inv.seg.fun <- function(y){
 
 
 ggplot(eng.nat) +
-  geom_segment(aes(x=0, xend=NaturalizedNumb, y=position, yend=position), lwd=inv.seg.fun(eng.nat$NaturalizedSE),    color = theme_Palette[1]) +
-  geom_point(aes(x = NaturalizedNumb, y = position), size = 6, color = theme_Palette[1]) +
+  geom_segment(aes(x=0, xend=NaturalizedNumb, y=position, yend=position), lwd=inv.seg.fun(eng.nat$NaturalizedSE),    color = cbPalette[6]) +
+  geom_point(aes(x = NaturalizedNumb, y = position), size = 6, color = cbPalette[6]) +
   scale_y_continuous(breaks = seq(from = 1, to = 13, by= 1), labels = eng.nat$FieldStudy) +
   scale_x_continuous(breaks = c(seq(from = 0, to = 15000, by = 2500)), 
                      limits = c(0, 15000))+
@@ -177,8 +181,8 @@ invfun <- function(x){
 
 
 ggplot(eng.nat) +
-  geom_segment(aes(x = 0, xend = NaturalizedNumb, y = invfun(position), yend = invfun(position)), lwd = 1,  color = theme_Palette[1])+
-  geom_circle(aes(x0 = NaturalizedNumb, y0 = invfun(position), r = NaturalizedSE), data = eng.nat, color = theme_Palette[5]) +
+  geom_segment(aes(x = 0, xend = NaturalizedNumb, y = invfun(position), yend = invfun(position)), lwd = 1,  color = cbPalette[6])+
+  geom_circle(aes(x0 = NaturalizedNumb, y0 = invfun(position), r = NaturalizedSE), data = eng.nat, color = cbPalette[2]) +
   coord_fixed() +
   theme_minimal() +
   scale_y_continuous(breaks = seq(from = invfun(1), to = invfun(13), by= invfun(fun(15000/12))), labels = eng.nat$FieldStudy) +

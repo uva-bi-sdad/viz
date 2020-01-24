@@ -89,8 +89,10 @@ ggplot() +
   plot.title = element_text(hjust = 0.5), 
   legend.position = "none") 
 
+#attempt to understand curved lines for polygon
+gg <- ggplot() +
+  geom_curve(aes(x = 0, xend = .10, y = YR2013+YR2013SE, yend = fun2(.1), color = FOS), curvature = .3, angle = 90) 
 
 
-
-
+build <- ggplot_build(gg)
 
