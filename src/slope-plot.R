@@ -91,7 +91,7 @@ ggplot() +
         axis.text=element_blank(),
         axis.title=element_blank(),
         axis.ticks=element_blank(), 
-        plot.title = element_text(hjust = 0.5), 
+        plot.title = element_text(hjust = 0.5, size = 18, face = "bold"), 
         legend.position = "none") 
 
 
@@ -143,7 +143,7 @@ ggplot() +
         axis.text=element_blank(),
         axis.title=element_blank(),
         axis.ticks=element_blank(), 
-        plot.title = element_text(hjust = 0.5), 
+        plot.title = element_text(hjust = 0.5, size = 18, face = "bold"), 
         legend.position = "none") 
 
 #shaded regions as seen in MU Collective
@@ -349,7 +349,7 @@ ggplot() +
         axis.text=element_blank(),
         axis.title=element_blank(),
         axis.ticks=element_blank(),
-        plot.title = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
         legend.position = "none")
 
 #slope dots
@@ -386,15 +386,15 @@ ggplot() +
         axis.text=element_blank(),
         axis.title=element_blank(),
         axis.ticks=element_blank(),
-        plot.title = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
         legend.position = "none")
 
 #slope line
 
 ggplot() +
   geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9), color = FOS),size = 1.2) +
-  geom_segment(aes(x =0, xend = .1, y = fun2(0), yend = fun2(.1), color = FOS),  size = 1.2) +
-  geom_segment(aes(x =0.9, xend = 1, y = fun2(0.9), yend = fun2(1), color = FOS),  size = 1.2) +
+  geom_segment(aes(x =0, xend = .1, y = fun2(0), yend = fun2(.1), color = FOS),  size = 1.2, linetype = "dotted") +
+  geom_segment(aes(x =0.9, xend = 1, y = fun2(0.9), yend = fun2(1), color = FOS),  size = 1.2, linetype = "dotted") +
   scale_color_manual(values = c(cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8]))+
   scale_x_continuous(limits=c(-0.5, 1.25)) +
   scale_y_continuous(limits = c(min(YR2013 - YR2013SE - 2), 94)) +
@@ -430,7 +430,7 @@ ggplot() +
         axis.text=element_blank(),
         axis.title=element_blank(),
         axis.ticks=element_blank(),
-        plot.title = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
         legend.position = "none")
 
 
