@@ -23,7 +23,15 @@ colnames(comp.math.se.18)[colnames(comp.math.se.18)== "2018...51"] <- "se.18.per
 
 comp.math.18 <- merge(comp.math.18, comp.math.se.18, by = "State")
 
-
+#Color Blind Palettes
+#color blind palette with grey
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+#color blind palette with black
+cbPalette.blk<-c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+#Display the colorblind palette
+wheel <- function(col, radius = 1, ...)
+  pie(rep(1, length(col)), col = col, radius = radius, ...)
+wheel(cbPalette)
 
 #parameters
 state_data = comp.math.18
@@ -297,7 +305,7 @@ gg +
   labs(title = "Computer and Mathematical Scientists as a \nPercent Error of All Occupations by State")
 
 
-
+gg
 
 
 # Error Squred (understates the SE)
@@ -308,18 +316,18 @@ if (round) {
   gg <- gg + geom_rtile(data = st.dat, radius = radius,
                         aes_string(x = "col", y = "row", fill = value_col),
                         color = state_border_col, size = state_border_size) + 
-    geom_tile(data = st.dat, aes(x = col, y = row,height = se.18.per, width = se.18.per), fill = "red", color = "red", alpha =0.8) + 
+    geom_tile(data = st.dat, aes(x = col, y = row,height = se.18.per, width = se.18.per), fill = cbPalette[2], color = cbPalette[2]) + 
     scale_y_reverse()
 } else {
   gg <- gg + geom_tile(data = st.dat,
                        aes_string(x = "col", y = "row", fill = value_col),
                        color = state_border_col, size = state_border_size) + 
-    geom_tile(data = st.dat, aes(x = col, y = row, height = se.18.per, width = se.18.per), fill = "red", color = "red", alpha =0.8) + 
+    geom_tile(data = st.dat, aes(x = col, y = row, height = se.18.per, width = se.18.per), fill = cbPalette[2], color = cbPalette[2]) + 
     scale_y_reverse()
 }
 
 
-gg <- gg + ggplot2_scale_function( direction = 1, "Proportion of Computer and Mathematical Scientists")
+gg <- gg + scale_fill_continuous(high = cbPalette[6], low = "white")#ggplot2_scale_function(direction = 1, "Proportion of Computer and Mathematical Scientists")
 gg <- gg + coord_equal()
 gg <- gg + labs(x = NULL, y = NULL)
 
@@ -333,8 +341,7 @@ gg <- gg + geom_text(data = st.dat,
 
 gg + 
   theme_statebins(legend_position="bottom") +
-  labs(title = "Computer and Mathematical Scientists as a \nProportion of All Occupations by State", legend = "Proportion of Computer and Mathematical Scientists", caption = "The red squares indicate standard error. Each side of the box equals percent error. \nEx) Washington DC SE = .30, each side of the box equals .30.")
-
+  labs(title = "Computer and Mathematical Scientists as a \nProportion of All Occupations by State", legend = "Proportion of Computer and Mathematical Scientists", caption = "The orange squares indicate standard error. Each side of the box equals percent error. \nEx) Washington DC SE = .30, each side of the box equals .30.") 
 
 
 # SQUARE ROOT (Overstates SE)
@@ -344,18 +351,18 @@ if (round) {
   gg <- gg + geom_rtile(data = st.dat, radius = radius,
                         aes_string(x = "col", y = "row", fill = value_col),
                         color = state_border_col, size = state_border_size) + 
-    geom_tile(data = st.dat, aes(x = col, y = row,height = sqrt(se.18.per), width = sqrt(se.18.per)), fill = "red", color = "red", alpha =0.8) + 
+    geom_tile(data = st.dat, aes(x = col, y = row,height = sqrt(se.18.per), width = sqrt(se.18.per)), fill = cbPalette[2], color = cbPalette[2]) + 
     scale_y_reverse()
 } else {
   gg <- gg + geom_tile(data = st.dat,
                        aes_string(x = "col", y = "row", fill = value_col),
                        color = state_border_col, size = state_border_size) + 
-    geom_tile(data = st.dat, aes(x = col, y = row, height = sqrt(se.18.per), width = sqrt(se.18.per)), fill = "red", color = "red", alpha =0.8) + 
+    geom_tile(data = st.dat, aes(x = col, y = row, height = sqrt(se.18.per), width = sqrt(se.18.per)), fill = cbPalette[2], color = cbPalette[2]) + 
     scale_y_reverse()
 }
 
 
-gg <- gg + ggplot2_scale_function( direction = 1, "Proportion of Computer and Mathematical Scientists")
+gg <- gg + scale_fill_continuous(high = cbPalette[6], low = "white")#ggplot2_scale_function( direction = 1, "Proportion of Computer and Mathematical Scientists")
 gg <- gg + coord_equal()
 gg <- gg + labs(x = NULL, y = NULL)
 
@@ -369,7 +376,7 @@ gg <- gg + geom_text(data = st.dat,
 
 gg + 
   theme_statebins(legend_position="bottom") +
-  labs(title = "Computer and Mathematical Scientists as a \nProportion of All Occupations by State", legend = "Proportion of Computer and Mathematical Scientists", caption = "The red squares indicate standard error. The area of the box idicate standard error. \nEx) Washington DC SE = .30, each side of the box equals .55, area = 0.3.")
+  labs(title = "Computer and Mathematical Scientists as a \nProportion of All Occupations by State", legend = "Proportion of Computer and Mathematical Scientists", caption = "The orange squares indicate standard error. The area of the box idicate standard error. \nEx) Washington DC SE = .30, each side of the box equals .55, area = 0.3.")
 
 
 
@@ -458,7 +465,7 @@ gg <- ggplot()
 if (round) {
   gg <- gg + geom_rtile(data = st.dat, radius = radius,
                         aes_string(x = "col", y = "row", fill = value_col)) +
-    geom_tile(data = st.dat, aes(x = col, y = row-1+0.5+0.5*se.18.per, height = se.18.per, width = 1), fill = "red") +
+    geom_tile(data = st.dat, aes(x = col, y = row-1+0.5+0.5*se.18.per, height = se.18.per, width = 1), fill = cbPalette[2]) +
     geom_tile(data = st.dat, aes_string(x = "col", y = "row"), fill = NA, color = state_border_col, size = 1) + 
     geom_rtile(data = st.dat, radius = radius,
                aes_string(x = "col", y = "row", fill = value_col),
@@ -466,14 +473,14 @@ if (round) {
     scale_y_reverse()
 } else {
   gg <- gg + geom_tile(data = st.dat, aes_string(x = "col", y = "row", fill = value_col)) +
-    geom_tile(data = st.dat, aes(x = col, y = row-1+0.5+0.5*se.18.per, height = se.18.per, width = 1), fill = "red") +
+    geom_tile(data = st.dat, aes(x = col, y = row-1+0.5+0.5*se.18.per, height = se.18.per, width = 1), fill = cbPalette[2]) +
     geom_tile(data = st.dat, aes_string(x = "col", y = "row"), fill = NA, color = state_border_col, size = state_border_size) + 
     scale_y_reverse()
   
 }
 
 
-gg <- gg + ggplot2_scale_function(direction = 1, "Proportion of Computer and Mathematical Scientists")
+gg <- gg + scale_fill_continuous(high = cbPalette[6], low = "white")#ggplot2_scale_function(direction = 1, "Proportion of Computer and Mathematical Scientists")
 gg <- gg + coord_equal()
 gg <- gg + labs(x = NULL, y = NULL)
 
@@ -487,7 +494,7 @@ gg <- gg + geom_text(data = st.dat,
 
 gg + 
   theme_statebins(legend_position="bottom") +
-  labs(title = "Computer and Mathematical Scientists as a \nProportion of All Occupations by State", caption = "Area of red box represents stand error. \nEx) Washington DC SE% = 0.3, height = 0.3, width = 1, area = 0.3")
+  labs(title = "Computer and Mathematical Scientists as a \nProportion of All Occupations by State", caption = "Area of orange box represents stand error. \nEx) Washington DC SE% = 0.3, height = 0.3, width = 1, area = 0.3")
 
 
 
