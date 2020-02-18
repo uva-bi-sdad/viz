@@ -1,3 +1,4 @@
+
 #SE DATA
 ##https://ncsesdata.nsf.gov/doctoratework/2017/html/sdr2017_dst_4-3.html
 ##https://ncsesdata.nsf.gov/doctoratework/2013/html/SDR2013_DST4_3.html
@@ -44,12 +45,12 @@ ggplot() +
 
 
 
-# plot multiple slope tails
 
 fun2 <- function(x){
   ((YR2017-YR2013)*x) + YR2013 
 }
 
+# SLOPE TAILS, MULTICOLOR
 ggplot() +
   geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9), color = FOS), size = 2) +
   scale_color_manual(values = c(cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8])) +
@@ -69,10 +70,9 @@ ggplot() +
             col= "grey30",
             hjust="right", size = 6, 
             fontface = "bold") +
-  geom_text(aes(x=0-0.1,
+  geom_text(aes(x=0-0.15,
                 y=YR2013,
-                label=paste0(FOS), 
-                col= FOS),
+                label=stringr::str_wrap(paste0(FOS), width = 25)),
             hjust="right") +
   geom_text(aes(x = 0-0.03, 
                 y = YR2013, 
@@ -83,7 +83,7 @@ ggplot() +
                 y=YR2017,
                 label=paste0(round(YR2017, 1), "%")),
             col="grey30") +
-  labs(title="Labor force participation rate among U.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017") +
+  labs(title="Labor force participation rate among \nU.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017") +
   theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
   theme_classic()+
   theme_void() +
@@ -93,6 +93,51 @@ ggplot() +
         axis.ticks=element_blank(), 
         plot.title = element_text(hjust = 0.5, size = 18, face = "bold"), 
         legend.position = "none") 
+
+# SLOPE TAILS, TWOCOLOR
+ggplot() +
+  geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9), color = DIF), size = 2) +
+  scale_color_manual(values = c(cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8])) +
+  scale_x_continuous(limits=c(-0.5, 1.25)) +
+  scale_y_continuous(limits = c(min(YR2013-YR2013SE -2), 94)) +
+  geom_point(aes(x =0, y = YR2013-YR2013SE, color = FOS)) +
+  geom_point(aes(x =0, y = YR2013+YR2013SE, color = DIF)) +
+  geom_point(aes(x =1, y = YR2017+YR2017SE, color = DIF)) +
+  geom_point(aes(x =1, y = YR2017-YR2017SE, color = DIF)) +
+  geom_curve(aes(x = 0, xend = .10, y = YR2013+YR2013SE, yend = fun2(.1), color = DIF), curvature = .3, angle = 90) +
+  geom_curve(aes(x = 0, xend = .10, y = YR2013-YR2013SE, yend = fun2(.1), color = DIF), curvature = -.3, angle = 90) +
+  geom_curve(aes(x = 1, xend = .90, y = YR2017+YR2017SE, yend = fun2(.9), color = DIF), curvature = -.3, angle = 90) +
+  geom_curve(aes(x = 1, xend = .90, y = YR2017-YR2017SE, yend = fun2(.9), color = DIF), curvature = .3, angle = 90) +
+  geom_text(aes(x=c(0, 1),
+                y = min(YR2013-YR2013SE -1),
+                label=c("2013", "2017")), 
+            col= "grey30",
+            hjust="right", size = 6, 
+            fontface = "bold") +
+  geom_text(aes(x=0-0.15,
+                y=YR2013,
+                label=stringr::str_wrap(paste0(FOS), width = 25)),
+            hjust="right") +
+  geom_text(aes(x = 0-0.03, 
+                y = YR2013, 
+                label = paste0(round(YR2013, 1), "%")), 
+            hjust="right", 
+            col="grey30") +
+  geom_text(aes(x=1+0.08,
+                y=YR2017,
+                label=paste0(round(YR2017, 1), "%")),
+            col="grey30") +
+  labs(title="Labor force participation rate among \nU.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017") +
+  theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
+  theme_classic()+
+  theme_void() +
+  theme(axis.line=element_blank(),
+        axis.text=element_blank(),
+        axis.title=element_blank(),
+        axis.ticks=element_blank(), 
+        plot.title = element_text(hjust = 0.5, size = 18, face = "bold"), 
+        legend.position = "none") 
+
 
 
 
@@ -172,7 +217,7 @@ ggplot(data = frame, aes(x=x, y=y)) +
 
 
 
-#area tails
+#SLOPE AREA
 
 # plot one
 fun <- function(x){
@@ -198,82 +243,9 @@ ggplot() +
  
 
 
-###SOMETHING WEIRD IS GOING ON WITH GROUPING
-
-fun2 <- function(x){
-  ((YR2017-YR2013)*x) + YR2013 
-}
-
-y <- c(YR2013+YR2013SE, YR2013-YR2013SE, fun2(.1), YR2017+YR2017SE, YR2017-YR2017SE, fun2(.9))
-
-x <- rep(c(0, 0, .1, 1, 1, .9), each = 7)
-id <- rep(c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n"), 3)
-
-frame <- data.frame(y,x,id)
-
-ggplot() +
-  geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9)), 
-               size = 1.2) +
-  scale_x_continuous(limits=c(-0.5, 1.25)) +
-  scale_y_continuous(limits = c(86, 94)) +
-  geom_polygon(aes(x =x, y = y, group = id, fill = id), alpha = 0.2)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-ggplot() +
-  geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9), color = FOS), size = 2) +
-  scale_x_continuous(limits=c(-0.5, 1.25)) +
-  scale_y_continuous(limits = c(86, 94)) +
-  geom_point(aes(x =0, y = YR2013-YR2013SE, color = FOS)) +
-  geom_point(aes(x =0, y = YR2013+YR2013SE, color = FOS)) +
-  geom_point(aes(x =1, y = YR2017+YR2017SE, color = FOS)) +
-  geom_point(aes(x =1, y = YR2017-YR2017SE, color = FOS)) +
-  geom_curve(aes(x = 0, xend = .10, y = YR2013+YR2013SE, yend = fun2(.1), color = FOS), curvature = .3, angle = 90) +
-  geom_curve(aes(x = 0, xend = .10, y = YR2013-YR2013SE, yend = fun2(.1), color = FOS), curvature = -.3, angle = 90) +
-  geom_curve(aes(x = 1, xend = .90, y = YR2017+YR2017SE, yend = fun2(.9), color = FOS), curvature = -.3, angle = 90) +
-  geom_curve(aes(x = 1, xend = .90, y = YR2017-YR2017SE, yend = fun2(.9), color = FOS), curvature = .3, angle = 90) +
-  geom_text(aes(x=0-0.1,
-                y=YR2013,
-                label=paste0(FOS), 
-                col= FOS),
-            hjust="right") +
-  geom_text(aes(x = 0-0.03, 
-                y = YR2013, 
-                label = paste0(round(YR2013, 1), "%")), 
-            hjust="right", 
-            col="grey30") +
-  geom_text(aes(x=1+0.08,
-                y=YR2017,
-                label=paste0(round(YR2017, 1), "%")),
-            col="grey30") +
-  labs(title="Labor force participation rate among U.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017") +
-  theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
-  theme_classic()+
-  theme_void() +
-  theme(axis.line=element_blank(),
-        axis.text=element_blank(),
-        axis.title=element_blank(),
-        axis.ticks=element_blank(), 
-        plot.title = element_text(hjust = 0.5), 
-        legend.position = "none") 
-
-
+# SLOPE AREA MULTI
 FOS <- c("Aerospace, Aeronautical, & Astronautical", "Chemical", "Civil", "Electrical & Computer", "Materials & Metallurgical", "Mechanical", "Other")
 YR2013 <- c(89.7, 87.6, 90.6, 92.0, 90.4, 92.9, 88.8)
 YR2013SE <- c(2.2,1.25, 1.40, .7, 1.4, 1.1, .95)
@@ -291,10 +263,6 @@ fun2 <- function(x){
   ((YR2017-YR2013)*x) + YR2013 
 }
 
-theme_Palette<-c("#1B3766", "#02ABD6", "#6DD4DB", "#A9D5A5", "#F17E1D")
-wheel <- function(col, radius = 1, ...)
-  pie(rep(1, length(col)), col=col, radius=radius)
-wheel(theme_Palette)
 y <- c(YR2013+YR2013SE, YR2013-YR2013SE, fun2(.1), YR2017+YR2017SE, YR2017-YR2017SE, fun2(.9))
 x <- rep(c(0, 0, .1, 1, 1, .9), each = 7)
 id <- rep(c("a", "b", "c", "d", "e", "f", "g"), 3)
@@ -307,7 +275,7 @@ id <- id$id
 
 
 
-# slope area
+# slope area multi
 
 
 
@@ -325,10 +293,9 @@ ggplot() +
             col= "grey30",
             hjust="right", size = 6, 
             fontface = "bold") +
-  geom_text(aes(x=0-0.1,
+  geom_text(aes(x=0-0.15,
                 y=YR2013,
-                label=paste0(FOS),
-                col= FOS),
+                label=stringr::str_wrap(paste0(FOS), width = 25)),
             hjust="right") +
   geom_text(aes(x = 0-0.03,
                 y = YR2013,
@@ -340,7 +307,7 @@ ggplot() +
                 y=YR2017,
                 label=paste0(round(YR2017, 1), "%")),
             col="grey30") +
-  labs(title="Labor force participation rate among U.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
+  labs(title="Labor force participation rate among \nU.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
        caption = "The shaded tails show the standard error.") +
   theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
   theme_classic()+
@@ -352,21 +319,20 @@ ggplot() +
         plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
         legend.position = "none")
 
-#slope dots
+#slope dots MULTI
 ggplot() +
   geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9), color = FOS),size = 1.2) +
   geom_segment(aes(x =0, xend = .1, y = fun2(0), yend = fun2(.1), color = FOS),  size = 1.2, linetype ="dotted") +
   geom_segment(aes(x =0.9, xend = 1, y = fun2(0.9), yend = fun2(1), color = FOS),  size = 1.2, linetype ="dotted") +
-  scale_color_manual(values = c(theme_Palette[1], theme_Palette[2], theme_Palette[3], theme_Palette[4], theme_Palette[5], "red", "purple"))+
+  scale_color_manual(values = c(cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8]))+
   scale_x_continuous(limits=c(-0.5, 1.25)) +
   scale_y_continuous(limits = c(86, 94)) +
   geom_polygon(aes(x =x, y = y, group = id, fill = id), alpha = 0.2) +
-  scale_fill_manual(values = c( rep(c(theme_Palette[1], theme_Palette[2], theme_Palette[3], theme_Palette[4], theme_Palette[5], "red", "purple"), 2))) +
-  geom_text(aes(x=0-0.1,
+  scale_fill_manual(values = c( rep(c(cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8]), 2))) +
+  geom_text(aes(x=0-0.15,
                 y=YR2013,
-                label=paste0(FOS),
-                col= FOS),
-            hjust="right") +
+                label=stringr::str_wrap(paste0(FOS), width = 25)),
+            hjust="right")  +
   geom_text(aes(x = 0-0.03,
                 y = YR2013,
                 label = paste0(round(YR2013, 1), "%")),
@@ -377,7 +343,7 @@ ggplot() +
                 y=YR2017,
                 label=paste0(round(YR2017, 1), "%")),
             col="grey30") +
-  labs(title="Labor force participation rate among U.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
+  labs(title="Labor force participation rate among \nU.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
        caption = "The shaded tails show the standard error.") +
   theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
   theme_classic()+
@@ -389,12 +355,52 @@ ggplot() +
         plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
         legend.position = "none")
 
-#slope line
+
+
+#slope dots TWOCOLOR
+ggplot() +
+  geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9), color = DIF),size = 1.2) +
+  geom_segment(aes(x =0, xend = .1, y = fun2(0), yend = fun2(.1), color = DIF),  size = 1.2, linetype ="dotted") +
+  geom_segment(aes(x =0.9, xend = 1, y = fun2(0.9), yend = fun2(1), color = DIF),  size = 1.2, linetype ="dotted") +
+  scale_color_manual(values = c(cbPalette[2], cbPalette[3]))+
+  scale_x_continuous(limits=c(-0.5, 1.25)) +
+  scale_y_continuous(limits = c(86, 94)) +
+  geom_polygon(aes(x =x, y = y, group = id, fill = rep(DIF, 6)), alpha = 0.2) +
+  scale_fill_manual(values = c( rep(c(cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8]), 2))) +
+  geom_text(aes(x=0-0.15,
+                y=YR2013,
+                label=stringr::str_wrap(paste0(FOS), width = 25)),
+            hjust="right")  +
+  geom_text(aes(x = 0-0.03,
+                y = YR2013,
+                label = paste0(round(YR2013, 1), "%")),
+            hjust
+            ="right",
+            col="grey30") +
+  geom_text(aes(x=1+0.08,
+                y=YR2017,
+                label=paste0(round(YR2017, 1), "%")),
+            col="grey30") +
+  labs(title="Labor force participation rate among \nU.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
+       caption = "The shaded tails show the standard error.") +
+  theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
+  theme_classic()+
+  theme_void() +
+  theme(axis.line=element_blank(),
+        axis.text=element_blank(),
+        axis.title=element_blank(),
+        axis.ticks=element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
+        legend.position = "none")
+
+
+
+#slope line MULTI
 
 ggplot() +
   geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9), color = FOS),size = 1.2) +
-  geom_segment(aes(x =0, xend = .1, y = fun2(0), yend = fun2(.1), color = FOS),  size = 1.2, linetype = "dotted") +
-  geom_segment(aes(x =0.9, xend = 1, y = fun2(0.9), yend = fun2(1), color = FOS),  size = 1.2, linetype = "dotted") +
+  geom_segment(aes(x =0, xend = .1, y = fun2(0), yend = fun2(.1), color = FOS),  size = 1.2) +
+  geom_segment(aes(x =0.9, xend = 1, y = fun2(0.9), yend = fun2(1), color = FOS),  size = 1.2) +
   scale_color_manual(values = c(cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8]))+
   scale_x_continuous(limits=c(-0.5, 1.25)) +
   scale_y_continuous(limits = c(min(YR2013 - YR2013SE - 2), 94)) +
@@ -406,10 +412,9 @@ ggplot() +
             col= "grey30",
             hjust="right", size = 6, 
             fontface = "bold") +
-  geom_text(aes(x=0-0.1,
+  geom_text(aes(x=0-0.15,
                 y=YR2013,
-                label=paste0(FOS),
-                col= FOS),
+                label=stringr::str_wrap(paste0(FOS), width = 25)),
             hjust="right") +
   geom_text(aes(x = 0-0.03,
                 y = YR2013,
@@ -421,7 +426,7 @@ ggplot() +
                 y=YR2017,
                 label=paste0(round(YR2017, 1), "%")),
             col="grey30") +
-  labs(title="Labor force participation rate among U.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
+  labs(title="Labor force participation rate among \nU.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
        caption = "The shaded tails show the standard error.") +
   theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
   theme_classic()+
@@ -433,28 +438,26 @@ ggplot() +
         plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
         legend.position = "none")
 
+#slope line TWO
 
-max(YR2013SE, YR2017SE)
-min(YR2013SE, YR2017SE)
-
-library(ggpubr)
-fun8<- function(x){
-  ((4-1)/(2.2-.65))*(x-.65)+1
-}
-
-#thickness of line this is ugly
 ggplot() +
-  geom_segment(aes(x = 0, xend = .5, y = fun2(0), yend = fun2(.5), color = FOS),size = fun8(YR2013SE)) +
-
-  geom_segment(aes(x =0.5, xend = 1, y = fun2(.5), yend = fun2(1), color = FOS),  size = fun8(YR2017SE)) +
-  scale_color_manual(values = c(theme_Palette[1], theme_Palette[2], theme_Palette[3], theme_Palette[4], theme_Palette[5], "red", "purple"))+
+  geom_segment(aes(x = 0.1, xend = .9, y = fun2(0.1), yend = fun2(0.9), color = DIF),size = 1.2) +
+  geom_segment(aes(x =0, xend = .1, y = fun2(0), yend = fun2(.1), color = DIF),  size = 1.2) +
+  geom_segment(aes(x =0.9, xend = 1, y = fun2(0.9), yend = fun2(1), color = DIF),  size = 1.2) +
+  scale_color_manual(values = c(cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8]))+
   scale_x_continuous(limits=c(-0.5, 1.25)) +
-  scale_y_continuous(limits = c(86, 94)) +
- 
-  geom_text(aes(x=0-0.1,
+  scale_y_continuous(limits = c(min(YR2013 - YR2013SE - 2), 94)) +
+  geom_polygon(aes(x =x, y = y, group = id, fill = rep(DIF, 6)), alpha = 0.2) +
+  scale_fill_manual(values = c( rep(c( cbPalette[2], cbPalette[3], cbPalette[4], cbPalette[5], cbPalette[6], cbPalette[7], cbPalette[8]), 2))) +
+  geom_text(aes(x=c(0, 1),
+                y=min(YR2013 - YR2013SE - 1),
+                label=c("2013", "2017")), 
+            col= "grey30",
+            hjust="right", size = 6, 
+            fontface = "bold") +
+  geom_text(aes(x=0-0.15,
                 y=YR2013,
-                label=paste0(FOS),
-                col= FOS),
+                label=stringr::str_wrap(paste0(FOS), width = 25)),
             hjust="right") +
   geom_text(aes(x = 0-0.03,
                 y = YR2013,
@@ -466,7 +469,7 @@ ggplot() +
                 y=YR2017,
                 label=paste0(round(YR2017, 1), "%")),
             col="grey30") +
-  labs(title="Labor force participation rate among U.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
+  labs(title="Labor force participation rate among \nU.S. residing doctoral scientists and engineers, \nby field of doctorate: 2013 and 2017",
        caption = "The shaded tails show the standard error.") +
   theme(plot.title=element_text(size=17, colour="#2a2a2b")) +
   theme_classic()+
@@ -475,31 +478,6 @@ ggplot() +
         axis.text=element_blank(),
         axis.title=element_blank(),
         axis.ticks=element_blank(),
-        plot.title = element_text(hjust = 0.5),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 18),
         legend.position = "none")
-
-# brackets
-ggplot() +
-  geom_segment(aes(x = 0, xend = 1, y = fun2(0), yend = fun2(1), color = FOS),size = 1.2) +
-  scale_color_manual(values = c(theme_Palette[1], theme_Palette[2], theme_Palette[3], theme_Palette[4], theme_Palette[5], "red", "purple"))+
-  geom_bracket(xmin = 0, xmax = .1, y.position = 8)+
-  scale_x_continuous(limits=c(-0.5, 1.25)) +
-  scale_y_continuous(limits = c(86, 94)) 
-
-
-df <- ToothGrowth
-df$dose <- factor(df$dose)
-
-# Add bracket with labels
-test <- ggboxplot(df, x = "dose", y = "len") 
- test+ geom_bracket(
-    xmin = "0.5", xmax = "1", y.position = 30,
-    label = "t-test, p < 0.05"
-  )+
-  coord_flip()
-
-
-
-
-
 
